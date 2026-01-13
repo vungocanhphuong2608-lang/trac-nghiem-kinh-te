@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm Kinh tế học</title>
+<style>
+body {
+    font-family: Arial;
+    background: #f0f2f5;
+    padding: 30px;
+}
+.container {
+    max-width: 900px;
+    background: #fff;
+    margin: auto;
+    padding: 25px;
+    border-radius: 10px;
+}
+h1 {
+    text-align: center;
+    color: #007bff;
+}
+.question {
+    margin-bottom: 20px;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+#result {
+    margin-top: 25px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>TRẮC NGHIỆM KINH TẾ HỌC</h1>
+<div id="quiz"></div>
+<button onclick="nopBai()">Nộp bài</button>
+<div id="result"></div>
+</div>
+
+<script>
+const questions = [
+{q:"Kinh tế học là gì?", o:["Nghiên cứu tiền","Phân bổ tài nguyên khan hiếm","Nghiên cứu của cải","Nghiên cứu con người","Tất cả đúng"], a:4},
+{q:"Doanh thu nông dân cao khi mất mùa vì?", o:["Cầu co giãn","Cung co giãn","Cầu không co giãn","Cung không co giãn","Sai"], a:2},
+{q:"Thu nhập tăng, ràng buộc ngân sách?", o:["Dịch song song ra ngoài","Quay dốc hơn","Quay thoải hơn","Dịch vào trong","Sai"], a:0},
+{q:"Hàng hóa cấp thấp?", o:["Giá tăng mua giảm","Giá giảm mua tăng","Thu nhập tăng mua giảm","Thu nhập giảm mua giảm","Không đổi"], a:2},
+{q:"Phải lựa chọn vì?", o:["Hiệu suất","Hợp lý","Khan hiếm","Tất cả","Sai"], a:2},
+{q:"Thặng dư sản xuất?", o:["TR - TC","TC","Giữa AVC & giá","TR - TVC","C và D"], a:4},
+{q:"Nắng hạn sẽ?", o:["Tăng cung","Cung dịch trái","Tăng cầu","Giảm cầu","Giảm giá thay thế"], a:1},
+{q:"Giá trị sản phẩm cận biên?", o:["Doanh thu","Gia nhập","MP×w","MP×P","Sai"], a:3},
+{q:"Doanh thu cận biên?", o:["<P","=P","Bán thêm","Lợi nhuận","B và C"], a:4},
+{q:"Ràng buộc ngân sách?", o:["Cơ hội","Không vượt thu nhập","LMC giảm","Tất cả","A và B"], a:4},
+{q:"Chi phí cơ hội mua áo?", o:["1h","100k","1h+100k","PA tốt nhất","Sai"], a:3},
+{q:"Hiệu suất tăng theo quy mô?", o:["<2","Một phần","=2",">2","Sai"], a:3},
+{q:"Cầu thị trường?", o:["Cộng dọc","Cộng ngang","TB","Không biết","Sai"], a:1},
+{q:"Do khan hiếm nên?", o:["Trả lời KT","Phải chọn","Người nghèo","CP phân bổ","Nghèo"], a:1},
+{q:"ATC dài hạn?", o:["Tổng","Bao dưới","Bao trên","Ngang","Sai"], a:1},
+{q:"Hàng thay thế?", o:["PA↑ thì PB↑","PA↑ PB↓","Thu nhập","Giá↓","Sai"], a:0},
+{q:"Tăng cung làm giá giảm trừ khi?", o:["Cung KC","Cầu KC","Cầu không co giãn","Cung CH","Sai"], a:2},
+{q:"Cầu cá nhân cho biết?", o:["Lượng mua","Giá cân bằng","Thay thế","Tất cả","A và C"], a:0},
+{q:"Co giãn theo thu nhập?", o:["1",">0","Thu nhập","Giá","Sai"], a:2},
+{q:"Ed=1.5, giá giảm?", o:["TR kđ","TR↓","TR↑","Gấp đôi","C và D"], a:2},
+{q:"PPF dịch do?", o:["Thất nghiệp","Lạm phát","Công nghệ","Thị hiếu","Sai"], a:2},
+{q:"Bổ sung hoàn hảo, PB↑?", o:["QA↑","PA↓","PA & QA↑","PA↑ QA↓","PA↓ QA↑"], a:3},
+{q:"Ed=1/3, P↑30%?", o:["Q↑10%","Q↓10%","Q↑90%","Q↓90%","Kđ"], a:1},
+{q:"Hàng bình thường, Y↑?", o:["NS ra","Cầu→","Q↑","Chi↑","Tất cả"], a:4},
+{q:"Ràng buộc ngân sách?", o:["Chi≤Y","Vô hạn","LMC↓","Tất cả","A và B"], a:0},
+{q:"Giá trục hoành ↓?", o:["Quay thoải","Quay dốc","Dịch song song","Dịch vào","Sai"], a:0},
+{q:"Hiệu suất giảm dần?", o:["Tăng tất cả","Tăng 1 yếu tố","CN","Giảm CP","Sai"], a:1},
+{q:"Cầu phụ thuộc?", o:["Giá","Thu nhập","Liên quan","Thị hiếu","Tất cả"], a:4},
+{q:"Chi phí cơ hội?", o:["Tiền","Kế toán","PA bỏ tốt nhất","Thu nhập","Sai"], a:2},
+{q:"Hiệu suất tăng quy mô?", o:["Q<I","Q=I","Q>I","CP↑","Sai"], a:2}
+];
+
+const quiz = document.getElementById("quiz");
+questions.forEach((c, i) => {
+    let html = `<div class="question"><b>Câu ${i+1}:</b> ${c.q}<br>`;
+    c.o.forEach((op, j) => {
+        html += `<input type="radio" name="q${i}" value="${j}"> ${op}<br>`;
+    });
+    html += "</div>";
+    quiz.innerHTML += html;
+});
+
+function nopBai() {
+    let diem = 0;
+    questions.forEach((c, i) => {
+        let chon = document.querySelector(`input[name="q${i}"]:checked`);
+        if (chon && parseInt(chon.value) === c.a) diem++;
+    });
+    document.getElementById("result").innerHTML =
+        `🎯 Bạn đúng ${diem}/${questions.length} câu`;
+}
+</script>
+
+</body>
+</html>
